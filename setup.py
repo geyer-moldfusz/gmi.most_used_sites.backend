@@ -4,13 +4,17 @@ import sys, os
 version = '0.1'
 
 requires = [
-    'eve<0.6',  # https://github.com/RedTurtle/eve-sqlalchemy/issues/79
-    'eve-sqlalchemy',
-    'pastescript',
-    'wsgiutils'
+    'pyramid',
+    'pyramid_chameleon',
+    'pyramid_debugtoolbar',
+    'pyramid_tm',
+    'SQLAlchemy',
+    'transaction',
+    'zope.sqlalchemy',
+    'waitress',
 ]
 
-setup(name='gmi.most_used_sites.backend',
+setup(name='gmi.mostusedsites.backend',
       version=version,
       description="REST backend for Most used Sites project",
       long_description="""\
@@ -21,12 +25,16 @@ setup(name='gmi.most_used_sites.backend',
       author_email='stefan@neuland.io',
       url='',
       license='GPLv3',
-      packages=['gmi', 'gmi.most_used_sites', 'gmi.most_used_sites.backend'],
+      packages=['gmi', 'gmi.mostusedsites', 'gmi.mostusedsites.backend'],
       package_dir={'': 'src'},
       include_package_data=True,
       zip_safe=False,
+      test_suite='gmi.mostusedsites.backend',
       install_requires=requires,
-      entry_points="""
-      # -*- Entry points: -*-
+      entry_points="""\
+      [paste.app_factory]
+      main = gmi.mostusedsites.backend:main
+      [console_scripts]
+      initialize_db = gmi.mostusedsites.backend.scripts.initializedb:main
       """,
       )
