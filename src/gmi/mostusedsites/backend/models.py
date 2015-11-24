@@ -27,7 +27,7 @@ class Visit(Base):
 
     def __init__(self, **kwargs):
         super(Visit, self).__init__(**kwargs)
-        self._id()
+        self.id = self._id()
 
     def _id(self):
         if not self.url:
@@ -37,4 +37,4 @@ class Visit(Base):
         sha1 = hashlib.sha1()
         sha1.update(self.url.encode())
         sha1.update(bytes(self.visited_at))
-        self.id = sha1.hexdigest()
+        return sha1.hexdigest()

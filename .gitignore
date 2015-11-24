@@ -30,7 +30,7 @@ env/
 htmlcov/
 include/
 lib/
-lib64/
+lib64
 nosetests.xml
 parts/
 pip-delete-this-directory.txt
