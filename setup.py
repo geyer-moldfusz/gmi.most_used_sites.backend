@@ -4,6 +4,7 @@ import sys, os
 version = '0.1'
 
 requires = [
+    'cornice',
     'pyramid',
     'pyramid_chameleon',
     'pyramid_debugtoolbar',
@@ -12,6 +13,7 @@ requires = [
     'transaction',
     'zope.sqlalchemy',
     'waitress',
+    'webtest',
 ]
 
 setup(name='gmi.mostusedsites.backend',
