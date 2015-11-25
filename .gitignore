@@ -9,6 +9,7 @@
 *.pyc
 *.so
 *.spec
+*.sqlite
 *.swp
 .Python
 .cache
