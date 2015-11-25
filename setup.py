@@ -4,6 +4,7 @@ import sys, os
 version = '0.1'
 
 requires = [
+    'colander',
     'cornice',
     'pyramid',
     'pyramid_chameleon',
