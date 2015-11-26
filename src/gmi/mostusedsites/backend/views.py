@@ -1,17 +1,29 @@
 from cornice import Service
+from colander import Invalid
 from pyramid.response import Response
 from pyramid.view import view_config
 from sqlalchemy.orm import load_only
 from sqlalchemy.orm.exc import NoResultFound
 from .models import DBSession, Visit, User
+from .schemas import VisitsPostSchema, UserSchema
+
+
+def valid_user(request):
+    try:
+        request.unique_user_id = UserSchema().deserialize(
+            request.matchdict['user'])
+    except Invalid:
+        request.errors.add('url', 'user id', 'invalid id format')
 
 
 all_visits = Service(name='all_visits', path='/visits')
-visits = Service(name='visits', path='/visits/{user}')
+visits = Service(name='visits', path='/visits/{user}', validators=[valid_user])
+
 
 @view_config(route_name='home')
 def indexview(request):
     return Response('<h1>Hello World!</h1>')
+
 
 @all_visits.get()
 def all_visits_get(request):
@@ -21,26 +33,27 @@ def all_visits_get(request):
     response = dict(_items=visits)
     return response
 
+
 @visits.get()
 def visits_get(request):
     visits = list(map(
         lambda x: dict(url=x.url, visited_at=x.visited_at, duration=x.duration),
         DBSession.query(Visit).join(User).filter(
-            User.unique_id==request.matchdict['user']).all()))
+            User.unique_id==request.unique_user_id).all()))
     response = dict(_items=visits)
     return response
 
-@visits.post()
+
+@visits.post(schema=VisitsPostSchema())
 def visits_post(request):
-    # XXX validation
     try:
         user = DBSession.query(User).filter(
-            User.unique_id==request.matchdict['user']).one()
+            User.unique_id==request.unique_user_id).one()
     except NoResultFound:
-        user = User(unique_id=request.matchdict['user'])
+        user = User(unique_id=request.unique_user_id)
         DBSession.add(user)
 
-    for visit in request.json_body:
+    for visit in request.json_body.get('visits'):
         user.visits.append(Visit(
             url=visit['url'],
             visited_at=visit['visited_at'],
