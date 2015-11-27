@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, ForeignKey, DateTime
+from sqlalchemy import Column, String, Integer, ForeignKey, DateTime, Boolean
 from sqlalchemy import func
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, backref, scoped_session, sessionmaker
@@ -22,6 +22,7 @@ class Visit(Base):
     url = Column(String(512), nullable=False)
     visited_at = Column(Integer, nullable=False)
     duration = Column(Integer, nullable=False)
+    active = Column(Boolean, nullable=False)
     user_id = Column(Integer, ForeignKey('users.id'))
     user = relationship(User, backref='visits')
 

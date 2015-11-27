@@ -57,7 +57,8 @@ class TestView:
         req = DummyRequest(
             unique_user_id='ujadkapdydazujuksyairpin',
             json_body={'visits': [
-                {'url': 'foo', 'visited_at': 1, 'duration': 1}]},
+                {'url': 'foo', 'visited_at': 1, 'duration': 1, 'active': True}
+            ]},
             post=True,
             content_type='application/json')
         res = views.visits_post(req)
@@ -67,7 +68,8 @@ class TestView:
         req = DummyRequest(
             unique_user_id='blovJoufEo',
             json_body={'visits': [
-                {'url': 'foo', 'visited_at': 1, 'duration': 1}]},
+                {'url': 'foo', 'visited_at': 1, 'duration': 1, 'active': True}
+            ]},
             post=True,
             content_type='application/json')
         res = views.visits_post(req)
@@ -97,7 +99,9 @@ class TestFunctional:
     def test_post_visit(self, app, visits):
         res = app.post_json(
             '/visits/ujadkapdydazujuksyairpin',
-            {'visits': [{'url': 'foo', 'visited_at': 1, 'duration': 1}]})
+            {'visits': [
+                {'url': 'foo', 'visited_at': 1, 'duration': 1, 'active': True}
+            ]})
         assert res.status_code == 200
         assert res.content_type == 'application/json'
 
@@ -112,5 +116,9 @@ class TestFunctional:
         with pytest.raises(AppError) as e:
             res = app.post_json(
                 '/visits/foo',
-                {'visits': [{'url': 'foo', 'visited_at': 1, 'duration': 1}]})
+                {'visits': [{
+                    'url': 'foo',
+                    'visited_at': 1,
+                    'duration': 1,
+                    'active': True}]})
         assert '400 Bad Request' in str(e)

@@ -54,8 +54,5 @@ def visits_post(request):
         DBSession.add(user)
 
     for visit in request.json_body.get('visits'):
-        user.visits.append(Visit(
-            url=visit['url'],
-            visited_at=visit['visited_at'],
-            duration=visit['duration']))
+        user.visits.append(Visit(**visit))
     return dict()

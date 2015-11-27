@@ -14,6 +14,7 @@ class VisitSchema(colander.MappingSchema):
     url = colander.SchemaNode(colander.String())
     duration = colander.SchemaNode(colander.Int())
     visited_at = colander.SchemaNode(colander.Int())
+    active = colander.SchemaNode(colander.Boolean())
 
 
 class VisitListSchema(colander.SequenceSchema):

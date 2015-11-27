@@ -20,33 +20,40 @@ class TestModels:
             commit()
 
     def test_visit(self, session):
-        visit = Visit(url='foo', visited_at=1, duration=1)
+        visit = Visit(url='foo', visited_at=1, duration=1, active=True)
         session.add(visit)
         assert(commit() == None)
 
     def test_visit_belongs_to_user(self, session):
         user = User(unique_id='foo')
-        visit = Visit(url='foo', visited_at=1, duration=1)
+        visit = Visit(url='foo', visited_at=1, duration=1, active=True)
         user.visits.append(visit)
 
         assert(visit.user == user)
 
     def test_visit_url_is_present(self, session):
-        visit = Visit(visited_at=1, duration=1)
+        visit = Visit(visited_at=1, duration=1, active=True)
         session.add(visit)
 
         with pytest.raises(IntegrityError):
             commit()
 
     def test_visit_visited_at_is_present(self, session):
-        visit = Visit(url='foo', duration=1)
+        visit = Visit(url='foo_visited', duration=1, active=True)
         session.add(visit)
 
         with pytest.raises(IntegrityError):
             commit()
 
     def test_visit_duration_is_present(self, session):
-        visit = Visit(url='foo', visited_at=1)
+        visit = Visit(url='foo_duration', visited_at=1, active=True)
+        session.add(visit)
+
+        with pytest.raises(IntegrityError):
+            commit()
+
+    def test_visit_active_is_present(self, session):
+        visit = Visit(url='foo_active', duration=1, visited_at=1)
         session.add(visit)
 
         with pytest.raises(IntegrityError):

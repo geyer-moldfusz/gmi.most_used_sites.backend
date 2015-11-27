@@ -31,7 +31,8 @@ class TestUserSchema:
 
 class TestVisitsSchema:
     def test_valid(self):
-        data = {'visits': [{'url': 'foo', 'duration': 1, 'visited_at': 1}]}
+        data = {'visits': [
+            {'url': 'foo', 'duration': 1, 'visited_at': 1, 'active': True}]}
         des = VisitsSchema().deserialize(data)
         assert des == data
 
@@ -42,7 +43,9 @@ class TestVisitsSchema:
 
     def test_additional_data(self):
         data = {
-            'visits': [{'url': 'foo', 'duration': 1, 'visited_at': 1}],
+            'visits': [
+                {'url': 'foo', 'duration': 1, 'visited_at': 1, 'active': True}
+            ],
             'foo': 'bar'}
         des = VisitsSchema().deserialize(data)
         assert 'foo' not in des
@@ -50,38 +53,44 @@ class TestVisitsSchema:
 
 class TestVisitListSchema:
     def test_valid(self):
-        data = [{'url': 'foo', 'duration': 1, 'visited_at': 1}]
+        data = [{'url': 'foo', 'duration': 1, 'visited_at': 1, 'active': True}]
         des = VisitListSchema().deserialize(data)
         assert des == data
 
     def test_no_list(self):
-        data = {'url': 'foo', 'duration': 1, 'visited_at': 1}
+        data = {'url': 'foo', 'duration': 1, 'visited_at': 1, 'active': True}
         with pytest.raises(colander.Invalid):
             VisitListSchema().deserialize(data)
 
 
 class TestVisitSchema:
     def test_valid(self):
-        data = dict(url='foo', duration=1, visited_at=1)
+        data = dict(url='foo', duration=1, visited_at=1, active=True)
         des = VisitSchema().deserialize(data)
         assert des == data
 
     def test_url_required(self):
-        data = dict(duration=1, visited_at=1)
+        data = dict(duration=1, visited_at=1, active=True)
         with pytest.raises(colander.Invalid):
             VisitSchema().deserialize(data)
 
     def test_duration_required(self):
-        data = dict(url='foo', visited_at=1)
+        data = dict(url='foo', visited_at=1, active=True)
         with pytest.raises(colander.Invalid):
             VisitSchema().deserialize(data)
 
     def test_visited_at_required(self):
-        data = dict(url='foo', duration=1)
+        data = dict(url='foo', duration=1, active=True)
+        with pytest.raises(colander.Invalid):
+            VisitSchema().deserialize(data)
+
+    def test_active_required(self):
+        data = dict(url='foo', duration=1, visited_at=1)
         with pytest.raises(colander.Invalid):
             VisitSchema().deserialize(data)
 
     def test_additional_data(self):
-        data = dict(url='foo', duration=1, visited_at=1, foo='bar')
+        data = dict(
+            url='foo', duration=1, visited_at=1, active=True, foo='bar')
         des = VisitSchema().deserialize(data)
         assert 'foo' not in des
