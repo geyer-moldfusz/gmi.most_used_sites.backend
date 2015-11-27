@@ -5,7 +5,7 @@ from pyramid.view import view_config
 from sqlalchemy.orm import load_only
 from sqlalchemy.orm.exc import NoResultFound
 from .models import DBSession, Visit, User
-from .schemas import VisitsPostSchema, UserSchema
+from .schemas import VisitsSchema, UserSchema
 
 
 def valid_user(request):
@@ -13,7 +13,7 @@ def valid_user(request):
         request.unique_user_id = UserSchema().deserialize(
             request.matchdict['user'])
     except Invalid:
-        request.errors.add('url', 'user id', 'invalid id format')
+        request.errors.add('querystring', 'user id', 'invalid id format')
 
 
 all_visits = Service(name='all_visits', path='/visits')
@@ -44,7 +44,7 @@ def visits_get(request):
     return response
 
 
-@visits.post(schema=VisitsPostSchema())
+@visits.post(schema=VisitsSchema)
 def visits_post(request):
     try:
         user = DBSession.query(User).filter(

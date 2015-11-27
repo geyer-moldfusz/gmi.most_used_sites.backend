@@ -1,5 +1,6 @@
 from gmi.mostusedsites.backend.schemas import (
     VisitsSchema,
+    VisitListSchema,
     VisitSchema,
     UserSchema)
 import colander
@@ -30,19 +31,33 @@ class TestUserSchema:
 
 class TestVisitsSchema:
     def test_valid(self):
-        data = [{'url': 'foo', 'duration': 1, 'visited_at': 1}]
+        data = {'visits': [{'url': 'foo', 'duration': 1, 'visited_at': 1}]}
         des = VisitsSchema().deserialize(data)
         assert des == data
 
-    def test_no_list(self):
-        data = dict(visits=dict(url='foo', duration=1, visited_at=1))
+    def test_visits_missing(self):
+        data = {'foo': 'bar'}
         with pytest.raises(colander.Invalid):
-            VisitsSchema().deserialize(data)
+            des = VisitsSchema().deserialize(data)
 
-    def test_no_dict(self):
-        data = dict(url='foo', duration=1, visited_at=1)
+    def test_additional_data(self):
+        data = {
+            'visits': [{'url': 'foo', 'duration': 1, 'visited_at': 1}],
+            'foo': 'bar'}
+        des = VisitsSchema().deserialize(data)
+        assert 'foo' not in des
+
+
+class TestVisitListSchema:
+    def test_valid(self):
+        data = [{'url': 'foo', 'duration': 1, 'visited_at': 1}]
+        des = VisitListSchema().deserialize(data)
+        assert des == data
+
+    def test_no_list(self):
+        data = {'url': 'foo', 'duration': 1, 'visited_at': 1}
         with pytest.raises(colander.Invalid):
-            VisitsSchema().deserialize(data)
+            VisitListSchema().deserialize(data)
 
 
 class TestVisitSchema:
@@ -66,7 +81,7 @@ class TestVisitSchema:
         with pytest.raises(colander.Invalid):
             VisitSchema().deserialize(data)
 
-    def test_no_additional_allowed(self):
+    def test_additional_data(self):
         data = dict(url='foo', duration=1, visited_at=1, foo='bar')
         des = VisitSchema().deserialize(data)
         assert 'foo' not in des

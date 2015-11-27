@@ -20,7 +20,7 @@ class TestValidation:
         assert req.errors == [{
             'name': 'user id',
             'description': 'invalid id format',
-            'location': 'url'}]
+            'location': 'querystring'}]
 
 
 class TestView:

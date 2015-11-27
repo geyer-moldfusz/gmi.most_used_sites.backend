@@ -16,9 +16,9 @@ class VisitSchema(colander.MappingSchema):
     visited_at = colander.SchemaNode(colander.Int())
 
 
-class VisitsSchema(colander.SequenceSchema):
+class VisitListSchema(colander.SequenceSchema):
     visit = VisitSchema()
 
 
-class VisitsPostSchema(colander.MappingSchema):
-    visits = VisitsSchema(location='body')
+class VisitsSchema(colander.MappingSchema):
+    visits = VisitListSchema(location='body')
