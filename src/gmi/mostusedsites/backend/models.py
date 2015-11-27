@@ -2,6 +2,7 @@ from sqlalchemy import Column, String, Integer, ForeignKey, DateTime, Boolean
 from sqlalchemy import func
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, backref, scoped_session, sessionmaker
+from urllib.parse import urlparse
 from zope.sqlalchemy import ZopeTransactionExtension
 import hashlib
 
@@ -23,12 +24,14 @@ class Visit(Base):
     visited_at = Column(Integer, nullable=False)
     duration = Column(Integer, nullable=False)
     active = Column(Boolean, nullable=False)
+    scheme = Column(String(8), nullable=False)
     user_id = Column(Integer, ForeignKey('users.id'))
     user = relationship(User, backref='visits')
 
     def __init__(self, **kwargs):
         super(Visit, self).__init__(**kwargs)
         self.id = self._id()
+        self.scheme = self._url(self.url)
 
     def _id(self):
         if not self.url:
@@ -39,3 +42,7 @@ class Visit(Base):
         sha1.update(self.url.encode())
         sha1.update(bytes(self.visited_at))
         return sha1.hexdigest()
+
+    def _url(self, url):
+        url = urlparse(url)
+        return url.scheme

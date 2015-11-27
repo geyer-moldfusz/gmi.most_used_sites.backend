@@ -11,7 +11,7 @@ class UserSchema(colander.SchemaNode):
 
 
 class VisitSchema(colander.MappingSchema):
-    url = colander.SchemaNode(colander.String())
+    url = colander.SchemaNode(colander.String(), validator=colander.url)
     duration = colander.SchemaNode(colander.Int())
     visited_at = colander.SchemaNode(colander.Int())
     active = colander.SchemaNode(colander.Boolean())

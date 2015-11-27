@@ -46,7 +46,7 @@ class TestView:
         req = DummyRequest(unique_user_id='ujadkapdydazujuksyairpin')
         res = views.visits_get(req)
         assert res['_items'] == [{
-            'duration': 1, 'url': 'test_visit', 'visited_at': 1}]
+            'duration': 1, 'url': 'http://test_visit', 'visited_at': 1}]
 
     def test_get_visit_non_existent(self, visits):
         req = DummyRequest(unique_user_id='foo')
@@ -57,7 +57,7 @@ class TestView:
         req = DummyRequest(
             unique_user_id='ujadkapdydazujuksyairpin',
             json_body={'visits': [
-                {'url': 'foo', 'visited_at': 1, 'duration': 1, 'active': True}
+                {'url': 'http://foo', 'visited_at': 1, 'duration': 1, 'active': True}
             ]},
             post=True,
             content_type='application/json')
@@ -68,7 +68,7 @@ class TestView:
         req = DummyRequest(
             unique_user_id='blovJoufEo',
             json_body={'visits': [
-                {'url': 'foo', 'visited_at': 1, 'duration': 1, 'active': True}
+                {'url': 'http://foo', 'visited_at': 1, 'duration': 1, 'active': True}
             ]},
             post=True,
             content_type='application/json')
@@ -100,7 +100,7 @@ class TestFunctional:
         res = app.post_json(
             '/visits/ujadkapdydazujuksyairpin',
             {'visits': [
-                {'url': 'foo', 'visited_at': 1, 'duration': 1, 'active': True}
+                {'url': 'http://foo', 'visited_at': 1, 'duration': 1, 'active': True}
             ]})
         assert res.status_code == 200
         assert res.content_type == 'application/json'
@@ -117,7 +117,7 @@ class TestFunctional:
             res = app.post_json(
                 '/visits/foo',
                 {'visits': [{
-                    'url': 'foo',
+                    'url': 'http://foo',
                     'visited_at': 1,
                     'duration': 1,
                     'active': True}]})

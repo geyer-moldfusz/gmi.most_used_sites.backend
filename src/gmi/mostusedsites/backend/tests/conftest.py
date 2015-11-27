@@ -45,6 +45,10 @@ def session(connection, request):
 def visits(session):
     user = User(unique_id='ujadkapdydazujuksyairpin')
     visit = Visit(
-        url='test_visit', visited_at=1, duration=1, user=user, active=True)
+        url='http://test_visit',
+        visited_at=1,
+        duration=1,
+        user=user,
+        active=True)
     session.add(user)
     session.add(visit)
