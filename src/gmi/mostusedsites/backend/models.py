@@ -36,5 +36,5 @@ class Visit(Base):
             return  # xxx raise
         sha1 = hashlib.sha1()
         sha1.update(self.url.encode())
-        sha1.update(bytes(self.visited_at))
+        sha1.update(str(self.visited_at).encode())
         return sha1.hexdigest()

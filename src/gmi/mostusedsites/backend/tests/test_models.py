@@ -54,8 +54,7 @@ class TestModels:
 
     def test_visit_id(self, session):
         visit = Visit(url='foo', visited_at=1, duration=1)
-
-        assert(visit.id == '2e774c1d2cfe7c32a48efba2b2c44cae1f78cb45')
+        assert(visit.id == '18a16d4530763ef43321d306c9f6c59ffed33072')
 
     def test_visit_id_unique(self, session):
         visit = Visit(url='bar', visited_at=1, duration=1)
@@ -65,3 +64,7 @@ class TestModels:
 
         with pytest.raises(IntegrityError):
             commit()
+
+    def test_visit_id_long_timestamp(self, session):
+        visit = Visit(url="bar", visited_at=1449073100894, duration=1)
+        assert(visit.id == '33ad6c7d92b8944470d5ca8e9d897fb2f32376ae')
