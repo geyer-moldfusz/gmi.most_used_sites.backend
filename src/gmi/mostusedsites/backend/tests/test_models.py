@@ -20,45 +20,52 @@ class TestModels:
             commit()
 
     def test_visit(self, session):
-        visit = Visit(url='foo', visited_at=1, duration=1)
+        visit = Visit(url='http://foo', visited_at=1, duration=1, active=True)
         session.add(visit)
         assert(commit() == None)
 
     def test_visit_belongs_to_user(self, session):
         user = User(unique_id='foo')
-        visit = Visit(url='foo', visited_at=1, duration=1)
+        visit = Visit(url='http://foo', visited_at=1, duration=1, active=True)
         user.visits.append(visit)
 
         assert(visit.user == user)
 
     def test_visit_url_is_present(self, session):
-        visit = Visit(visited_at=1, duration=1)
+        visit = Visit(visited_at=1, duration=1, active=True)
         session.add(visit)
 
         with pytest.raises(IntegrityError):
             commit()
 
     def test_visit_visited_at_is_present(self, session):
-        visit = Visit(url='foo', duration=1)
+        visit = Visit(url='http://foo_visited', duration=1, active=True)
         session.add(visit)
 
         with pytest.raises(IntegrityError):
             commit()
 
     def test_visit_duration_is_present(self, session):
-        visit = Visit(url='foo', visited_at=1)
+        visit = Visit(url='http://foo_duration', visited_at=1, active=True)
+        session.add(visit)
+
+        with pytest.raises(IntegrityError):
+            commit()
+
+    def test_visit_active_is_present(self, session):
+        visit = Visit(url='http://foo_active', duration=1, visited_at=1)
         session.add(visit)
 
         with pytest.raises(IntegrityError):
             commit()
 
     def test_visit_id(self, session):
-        visit = Visit(url='foo', visited_at=1, duration=1)
-        assert(visit.id == '18a16d4530763ef43321d306c9f6c59ffed33072')
+        visit = Visit(url='http://foo', visited_at=1, duration=1)
+        assert(visit.id == '1aa0598ba12ba82e6b6a88f97f010948f33a01d5')
 
     def test_visit_id_unique(self, session):
-        visit = Visit(url='bar', visited_at=1, duration=1)
-        visit1 = Visit(url='bar', visited_at=1, duration=1)
+        visit = Visit(url='http://bar', visited_at=1, duration=1)
+        visit1 = Visit(url='http://bar', visited_at=1, duration=1)
         session.add(visit)
         session.add(visit1)
 
@@ -66,5 +73,9 @@ class TestModels:
             commit()
 
     def test_visit_id_long_timestamp(self, session):
-        visit = Visit(url="bar", visited_at=1449073100894, duration=1)
-        assert(visit.id == '33ad6c7d92b8944470d5ca8e9d897fb2f32376ae')
+        visit = Visit(url="http://bar", visited_at=1449073100894, duration=1)
+        assert(visit.id == 'cdd896d38b96f973e2d0f446daf5da090878f585')
+
+    def test_visit_schema(self, session):
+        visit = Visit(url='https://bar', visited_at=1, duration=1)
+        assert(visit.scheme == 'https')
