@@ -32,11 +32,8 @@ class TestModels:
         assert(visit.user == user)
 
     def test_visit_url_is_present(self, session):
-        visit = Visit(visited_at=1, duration=1, active=True)
-        session.add(visit)
-
-        with pytest.raises(IntegrityError):
-            commit()
+        with pytest.raises(TypeError):
+            visit = Visit(visited_at=1, duration=1, active=True)
 
     def test_visit_visited_at_is_present(self, session):
         visit = Visit(url='http://foo_visited', duration=1, active=True)

@@ -2,9 +2,13 @@ from sqlalchemy import Column, String, Integer, ForeignKey, DateTime, Boolean
 from sqlalchemy import func
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, backref, scoped_session, sessionmaker
-from urllib.parse import urlparse
 from zope.sqlalchemy import ZopeTransactionExtension
 import hashlib
+
+try:
+    from urllib.parse import urlparse
+except ImportError:
+    from urlparse import urlparse
 
 
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
@@ -30,10 +34,11 @@ class Visit(Base):
     user_id = Column(Integer, ForeignKey('users.id'))
     user = relationship(User, backref='visits')
 
-    def __init__(self, **kwargs):
+    def __init__(self, url, **kwargs):
+        self.url = url              # XXX this should be obsolete in future
         super(Visit, self).__init__(**kwargs)
-        self.id = self._id()
-        self.scheme, self.host, self.path = self._url(self.url)
+        self.id = self._id()        # use multicolumn uniqueness
+        self.scheme, self.host, self.path = self._url(url)
 
     def _id(self):
         if not self.url:
