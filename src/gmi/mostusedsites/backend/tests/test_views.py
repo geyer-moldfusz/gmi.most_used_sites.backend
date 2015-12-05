@@ -56,9 +56,11 @@ class TestView:
     def test_post_visits(self, visits):
         req = DummyRequest(
             unique_user_id='ujadkapdydazujuksyairpin',
-            json_body={'visits': [
-                {'url': 'http://foo', 'visited_at': 1, 'duration': 1, 'active': True}
-            ]},
+            json_body={'visits': [{
+                'url': 'http://foo',
+                'visited_at': 1,
+                'duration': 1,
+                'active': True}]},
             post=True,
             content_type='application/json')
         res = views.visits_post(req)
@@ -67,9 +69,11 @@ class TestView:
     def test_post_visits_creates_user(self, session, visits):
         req = DummyRequest(
             unique_user_id='blovJoufEo',
-            json_body={'visits': [
-                {'url': 'http://foo', 'visited_at': 1, 'duration': 1, 'active': True}
-            ]},
+            json_body={'visits': [{
+                'url': 'http://foo',
+                'visited_at': 1,
+                'duration': 1,
+                'active': True}]},
             post=True,
             content_type='application/json')
         res = views.visits_post(req)
@@ -99,9 +103,11 @@ class TestFunctional:
     def test_post_visit(self, app, visits):
         res = app.post_json(
             '/visits/ujadkapdydazujuksyairpin',
-            {'visits': [
-                {'url': 'http://foo', 'visited_at': 1, 'duration': 1, 'active': True}
-            ]})
+            {'visits': [{
+                'url': 'http://foo',
+                'visited_at': 1,
+                'duration': 1,
+                'active': True}]})
         assert res.status_code == 200
         assert res.content_type == 'application/json'
 
