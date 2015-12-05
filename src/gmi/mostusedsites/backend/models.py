@@ -24,14 +24,16 @@ class Visit(Base):
     visited_at = Column(Integer, nullable=False)
     duration = Column(Integer, nullable=False)
     active = Column(Boolean, nullable=False)
-    scheme = Column(String(8), nullable=False)
+    scheme = Column(String(32), nullable=False)
+    host = Column(String(512), nullable=False)
+    path = Column(String(512), nullable=False)
     user_id = Column(Integer, ForeignKey('users.id'))
     user = relationship(User, backref='visits')
 
     def __init__(self, **kwargs):
         super(Visit, self).__init__(**kwargs)
         self.id = self._id()
-        self.scheme = self._url(self.url)
+        self.scheme, self.host, self.path = self._url(self.url)
 
     def _id(self):
         if not self.url:
@@ -45,4 +47,4 @@ class Visit(Base):
 
     def _url(self, url):
         url = urlparse(url)
-        return url.scheme
+        return (url.scheme, url.netloc, url.path)

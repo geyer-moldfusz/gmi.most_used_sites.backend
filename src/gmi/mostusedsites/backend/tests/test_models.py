@@ -79,3 +79,15 @@ class TestModels:
     def test_visit_schema(self, session):
         visit = Visit(url='https://bar', visited_at=1, duration=1)
         assert(visit.scheme == 'https')
+
+    def test_visit_host(self, session):
+        visit = Visit(url='https://bar', visited_at=1, duration=1)
+        assert(visit.host == 'bar')
+
+    def test_visit_path(self, session):
+        visit = Visit(url='https://bar/foo/baz', visited_at=1, duration=1)
+        assert(visit.path == '/foo/baz')
+
+    def test_visit_no_params(self, session):
+        visit = Visit(url='https://bar/foo?a=1&b=2', visited_at=1, duration=1)
+        assert(visit.path == '/foo')
