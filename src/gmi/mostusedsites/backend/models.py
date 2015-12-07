@@ -23,7 +23,7 @@ class User(Base):
 
 class Visit(Base):
     __tablename__ = 'visits'
-    id = Column(String(20), primary_key=True)
+    id = Column(String(40), primary_key=True)
     url = Column(String(512), nullable=False)
     visited_at = Column(Integer, nullable=False)
     duration = Column(Integer, nullable=False)

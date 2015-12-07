@@ -28,7 +28,7 @@ def upgrade():
     sa.UniqueConstraint('unique_id')
     )
     op.create_table('visits',
-    sa.Column('id', sa.String(length=20), nullable=False),
+    sa.Column('id', sa.String(length=40), nullable=False),
     sa.Column('url', sa.String(length=512), nullable=False),
     sa.Column('scheme', sa.String(length=32), nullable=False),
     sa.Column('host', sa.String(length=512), nullable=False),
