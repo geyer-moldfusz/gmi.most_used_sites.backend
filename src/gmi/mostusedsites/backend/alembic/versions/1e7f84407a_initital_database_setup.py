@@ -33,7 +33,7 @@ def upgrade():
     sa.Column('scheme', sa.String(length=32), nullable=False),
     sa.Column('host', sa.String(length=512), nullable=False),
     sa.Column('path', sa.String(length=512), nullable=False),
-    sa.Column('visited_at', sa.Integer(), nullable=False),
+    sa.Column('visited_at', sa.BigInteger(), nullable=False),
     sa.Column('duration', sa.Integer(), nullable=False),
     sa.Column('active', sa.Boolean(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=True),

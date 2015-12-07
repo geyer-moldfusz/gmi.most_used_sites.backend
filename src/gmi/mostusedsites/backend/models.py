@@ -1,4 +1,5 @@
-from sqlalchemy import Column, String, Integer, ForeignKey, DateTime, Boolean
+from sqlalchemy import (
+    Column, String, BigInteger, Integer, ForeignKey, DateTime, Boolean)
 from sqlalchemy import func
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, backref, scoped_session, sessionmaker
@@ -25,7 +26,7 @@ class Visit(Base):
     __tablename__ = 'visits'
     id = Column(String(40), primary_key=True)
     url = Column(String(512), nullable=False)
-    visited_at = Column(Integer, nullable=False)
+    visited_at = Column(BigInteger, nullable=False)
     duration = Column(Integer, nullable=False)
     active = Column(Boolean, nullable=False)
     scheme = Column(String(32), nullable=False)
