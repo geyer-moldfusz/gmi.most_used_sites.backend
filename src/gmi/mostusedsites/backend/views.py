@@ -28,7 +28,11 @@ def indexview(request):
 @all_visits.get()
 def all_visits_get(request):
     visits = list(map(
-        lambda x: dict(url=x.url, visited_at=x.visited_at, duration=x.duration),
+        lambda x: dict(
+            url=x.url,
+            visited_at=x.visited_at,
+            duration=x.duration,
+            active=x.active),
         DBSession.query(Visit).all()))
     response = dict(_items=visits)
     return response
@@ -37,7 +41,11 @@ def all_visits_get(request):
 @visits.get()
 def visits_get(request):
     visits = list(map(
-        lambda x: dict(url=x.url, visited_at=x.visited_at, duration=x.duration),
+        lambda x: dict(
+            url=x.url,
+            visited_at=x.visited_at,
+            duration=x.duration,
+            active=x.active),
         DBSession.query(Visit).join(User).filter(
             User.unique_id==request.unique_user_id).all()))
     response = dict(_items=visits)

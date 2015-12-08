@@ -34,19 +34,31 @@ class TestView:
         res = views.all_visits_get(req)
         assert res['_items'] != []
         for visit in res['_items']:
-            assert set(visit.keys()) == set(['visited_at', 'duration', 'url'])
+            assert set(visit.keys()) == set(
+                ['visited_at', 'duration', 'url', 'active'])
 
     def test_get_visit(self, visits):
         req = DummyRequest(unique_user_id='ujadkapdydazujuksyairpin')
         res = views.visits_get(req)
         for visit in res['_items']:
-            assert set(visit.keys()) == set(['visited_at', 'duration', 'url'])
+            assert set(visit.keys()) == set(
+                ['visited_at', 'duration', 'url', 'active'])
 
     def test_get_visit_existent(self, visits):
         req = DummyRequest(unique_user_id='ujadkapdydazujuksyairpin')
         res = views.visits_get(req)
-        assert res['_items'] == [{
-            'duration': 1, 'url': 'http://test_visit', 'visited_at': 1}]
+        assert res['_items'] == [
+            {
+                'duration': 1,
+                'url': 'http://test_visit',
+                'visited_at': 1,
+                'active': True
+            }, {
+                'duration': 1,
+                'url': 'http://test_visit/foo?bar',
+                'visited_at': 1,
+                'active': False
+            }]
 
     def test_get_visit_non_existent(self, visits):
         req = DummyRequest(unique_user_id='foo')

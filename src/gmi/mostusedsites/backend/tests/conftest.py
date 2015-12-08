@@ -44,11 +44,16 @@ def session(connection, request):
 @pytest.fixture(scope='function')
 def visits(session):
     user = User(unique_id='ujadkapdydazujuksyairpin')
-    visit = Visit(
+    session.add(user)
+    session.add(Visit(
         url='http://test_visit',
         visited_at=1,
         duration=1,
         user=user,
-        active=True)
-    session.add(user)
-    session.add(visit)
+        active=True))
+    session.add(Visit(
+        url='http://test_visit/foo?bar',
+        visited_at=1,
+        duration=1,
+        user=user,
+        active=False))
