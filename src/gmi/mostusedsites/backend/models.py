@@ -25,7 +25,6 @@ class User(Base):
 class Visit(Base):
     __tablename__ = 'visits'
     id = Column(String(40), primary_key=True)
-    url = Column(String(512), nullable=False)
     visited_at = Column(BigInteger, nullable=False)
     duration = Column(Integer, nullable=False)
     active = Column(Boolean, nullable=False)
