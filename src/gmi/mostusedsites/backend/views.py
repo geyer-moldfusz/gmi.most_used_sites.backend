@@ -29,7 +29,7 @@ def indexview(request):
 def all_visits_get(request):
     visits = list(map(
         lambda x: dict(
-            url=x.url,
+            host=x.host,
             visited_at=x.visited_at,
             duration=x.duration,
             active=x.active),
@@ -42,7 +42,9 @@ def all_visits_get(request):
 def visits_get(request):
     visits = list(map(
         lambda x: dict(
-            url=x.url,
+            host=x.host,
+            scheme=x.scheme,
+            path=x.path,
             visited_at=x.visited_at,
             duration=x.duration,
             active=x.active),

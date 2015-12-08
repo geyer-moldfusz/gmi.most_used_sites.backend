@@ -52,7 +52,7 @@ def visits(session):
         user=user,
         active=True))
     session.add(Visit(
-        url='http://test_visit/foo?bar',
+        url='https://test_visit/foo?bar',
         visited_at=1,
         duration=1,
         user=user,
