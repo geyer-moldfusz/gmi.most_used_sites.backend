@@ -1,7 +1,7 @@
 Changelog for "Most used sites" backend
 =======================================
 
-0.2 (unreleased)
+0.2 (2015-12-08)
 ----------------
 
 - JSON responses, split url in host, scheme and path.
