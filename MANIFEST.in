@@ -2,5 +2,6 @@ include *.md
 include *.rst
 include LICENSE
 include tox.ini
+include testing.ini
 recursive-include src *.mako
 recursive-include src *.py
