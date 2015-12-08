@@ -1,6 +1,12 @@
 Changelog for "Most used sites" backend
 =======================================
 
+0.3 (unreleased)
+----------------
+
+- Nothing changed yet.
+
+
 0.2 (2015-12-08)
 ----------------
 
