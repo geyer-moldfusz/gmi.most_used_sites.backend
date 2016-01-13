@@ -1,6 +1,7 @@
 from cornice.errors import Errors
 from gmi.mostusedsites.backend import views
 from gmi.mostusedsites.backend.models import User
+from pyramid.httpexceptions import HTTPServiceUnavailable
 from pyramid.testing import DummyRequest
 from webtest.app import AppError
 import colander
@@ -26,27 +27,38 @@ class TestValidation:
 class TestView:
     def test_index(self):
         req = DummyRequest()
-        res = views.indexview(req)
+        res = views.index(req)
         assert res.status_code == 200
+
+    def test_status(self, status_intact):
+        req = DummyRequest()
+        res = views.status_get(req)
+        assert res == dict(status = 'ok')
+
+    def test_status_failure(self, status_failure):
+        req = DummyRequest()
+        with pytest.raises(HTTPServiceUnavailable) as e:
+            res = views.status_get(req)
+        assert 'The server is currently unavailable' in str(e)
 
     def test_all_visits(self, visits):
         req = DummyRequest()
         res = views.all_visits_get(req)
-        assert res['_items'] != []
-        for visit in res['_items']:
+        assert res['visits'] != []
+        for visit in res['visits']:
             assert set(visit.keys()) == set(
-                ['visited_at', 'duration', 'host', 'active'])
+                ['visited_at', 'duration', 'host', 'active', 'id'])
 
     def test_all_visits_does_not_expose_path(self, visits):
         req = DummyRequest()
         res = views.all_visits_get(req)
-        for visit in res['_items']:
+        for visit in res['visits']:
             assert "foo" not in visit['host']
 
     def test_all_visits_does_not_expose_params(self, visits):
         req = DummyRequest()
         res = views.all_visits_get(req)
-        for visit in res['_items']:
+        for visit in res['visits']:
             assert "?" not in visit['host']
 
     def test_get_visits(self, visits):
@@ -118,6 +130,17 @@ class TestFunctional:
     def test_index(self, app):
         res = app.get('/')
         assert res.status_code == 200
+
+    def test_status(self, app, status_intact):
+        res = app.get('/status')
+        assert res.status_code == 200
+        assert res.content_type == 'application/json'
+
+    def test_status_failed(self, app, status_failure):
+        with pytest.raises(AppError) as e:
+            res = app.get('/status')
+        assert '503 Service Unavailable' in str(e)
+
 
     def test_get_all_visits(self, app, visits):
         res = app.get('/visits')

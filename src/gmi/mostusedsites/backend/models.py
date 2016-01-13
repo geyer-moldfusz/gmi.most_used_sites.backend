@@ -53,3 +53,8 @@ class Visit(Base):
     def _url(self, url):
         url = urlparse(url)
         return (url.scheme, url.netloc, url.path)
+
+
+class State(Base):
+    __tablename__ = 'states'
+    intact = Column(Boolean, default=True, primary_key=True)

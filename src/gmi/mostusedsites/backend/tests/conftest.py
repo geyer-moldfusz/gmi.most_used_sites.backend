@@ -1,4 +1,5 @@
-from gmi.mostusedsites.backend.models import Base, Visit, User, DBSession
+from gmi.mostusedsites.backend.models import (
+    Base, Visit, User, State, DBSession)
 from pyramid.config import Configurator
 from pyramid.testing import testConfig
 from sqlalchemy import create_engine
@@ -57,3 +58,15 @@ def visits(session):
         duration=1,
         user=user,
         active=False))
+
+
+@pytest.fixture(scope='function')
+def status_intact(session):
+    state = State(intact=True)
+    session.add(state)
+
+
+@pytest.fixture(scope='function')
+def status_failure(session):
+    state = State(intact=False)
+    session.add(state)
