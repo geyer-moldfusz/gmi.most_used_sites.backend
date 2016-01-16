@@ -1,7 +1,7 @@
 Changelog for "Most used sites" backend
 =======================================
 
-0.3 (unreleased)
+0.3 (2016-01-16)
 ----------------
 
 - JSON responses, update all_visits scheme to match frontend requirements.
