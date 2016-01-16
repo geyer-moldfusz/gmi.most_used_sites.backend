@@ -42,7 +42,6 @@ def status_get(request):
 def all_visits_get(request):
     visits = list(map(
         lambda x: dict(
-            id=x.id,
             host=x.host,
             visited_at=x.visited_at,
             duration=x.duration,

@@ -47,7 +47,7 @@ class TestView:
         assert res['visits'] != []
         for visit in res['visits']:
             assert set(visit.keys()) == set(
-                ['visited_at', 'duration', 'host', 'active', 'id'])
+                ['visited_at', 'duration', 'host', 'active'])
 
     def test_all_visits_does_not_expose_path(self, visits):
         req = DummyRequest()
