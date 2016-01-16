@@ -1,7 +1,7 @@
 Changelog for "Most used sites" backend
 =======================================
 
-0.4 (unreleased)
+0.4 (2016-01-16)
 ----------------
 
 - Fix states table for status page.
