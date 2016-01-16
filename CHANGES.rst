@@ -4,7 +4,8 @@ Changelog for "Most used sites" backend
 0.3 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- JSON responses, update all_visits scheme to match frontend requirements.
+- Add JSON-aware status page to deep-check site.
 
 
 0.2 (2015-12-08)
