@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 from setuptools.command.test import test as TestCommand
 import sys, os
 
-version = '0.3'
+version = '0.4.dev0'
 
 requires = [
     'alembic',
