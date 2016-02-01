@@ -62,7 +62,7 @@ def visits_get(request):
             active=x.active),
         DBSession.query(Visit).join(User).filter(
             User.unique_id==request.unique_user_id).limit(20000).all()))
-    response = dict(_items=visits)
+    response = dict(visits=visits)
     return response
 
 
