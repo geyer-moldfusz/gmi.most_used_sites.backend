@@ -57,13 +57,11 @@ def visits_get(request):
     visits = list(map(
         lambda x: dict(
             host=x.host,
-            scheme=x.scheme,
-            path=x.path,
             visited_at=x.visited_at,
             duration=x.duration,
             active=x.active),
         DBSession.query(Visit).join(User).filter(
-            User.unique_id==request.unique_user_id).all()))
+            User.unique_id==request.unique_user_id).limit(20000).all()))
     response = dict(_items=visits)
     return response
 
