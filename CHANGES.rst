@@ -1,7 +1,7 @@
 Changelog for "Most used sites" backend
 =======================================
 
-0.6 (unreleased)
+0.6 (2016-02-01)
 ----------------
 
 - Fix JSON response, use 'visits' instead of '_items' for response dict.
