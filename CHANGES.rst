@@ -1,7 +1,7 @@
 Changelog for "Most used sites" backend
 =======================================
 
-0.5 (unreleased)
+0.5 (2016-02-01)
 ----------------
 
 - Adjust JSON response for individual user.
