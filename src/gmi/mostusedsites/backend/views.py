@@ -71,7 +71,7 @@ def visits_get(request):
         DBSession.query(Visit).join(User).filter(
             User.unique_id==request.unique_user_id,
             Visit.visited_at>request.since
-        ).limit(20000).all()))
+        ).order_by(Visit.visited_at.desc()).limit(20000).all()))
     response = dict(visits=visits)
     return response
 

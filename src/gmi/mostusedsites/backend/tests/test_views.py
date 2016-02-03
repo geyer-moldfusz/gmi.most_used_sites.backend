@@ -94,13 +94,13 @@ class TestView:
             {
                 'duration': 1,
                 'host': 'test_visit',
-                'visited_at': 1,
-                'active': True
+                'visited_at': 3,
+                'active': False
             }, {
                 'duration': 1,
                 'host': 'test_visit',
-                'visited_at': 3,
-                'active': False
+                'visited_at': 1,
+                'active': True
             }]
 
     def test_get_visits_since(self, visits):
