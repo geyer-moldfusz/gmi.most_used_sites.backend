@@ -1,7 +1,7 @@
 Changelog for "Most used sites" backend
 =======================================
 
-0.7 (unreleased)
+0.7 (2016-02-03)
 ----------------
 
 - API change, request visits newer then timestamp.
