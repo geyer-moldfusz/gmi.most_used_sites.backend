@@ -72,7 +72,7 @@ def visits_get(request):
             User.unique_id==request.unique_user_id,
             Visit.visited_at>request.since
         ).limit(20000).all()))
-    response = dict(_items=visits)
+    response = dict(visits=visits)
     return response
 
 

@@ -83,14 +83,14 @@ class TestView:
     def test_get_visits(self, visits):
         req = DummyRequest(unique_user_id='ujadkapdydazujuksyairpin', since=0)
         res = views.visits_get(req)
-        for visit in res['_items']:
+        for visit in res['visits']:
             assert set(visit.keys()) == set(
                 ['visited_at', 'duration', 'host', 'active'])
 
     def test_get_visits_existent(self, visits):
         req = DummyRequest(unique_user_id='ujadkapdydazujuksyairpin', since=0)
         res = views.visits_get(req)
-        assert res['_items'] == [
+        assert res['visits'] == [
             {
                 'duration': 1,
                 'host': 'test_visit',
@@ -106,7 +106,7 @@ class TestView:
     def test_get_visits_since(self, visits):
         req = DummyRequest(unique_user_id='ujadkapdydazujuksyairpin', since=2)
         res = views.visits_get(req)
-        assert res['_items'] == [
+        assert res['visits'] == [
             {
                 'duration': 1,
                 'host': 'test_visit',
@@ -117,12 +117,12 @@ class TestView:
     def test_get_visits_non_existent(self, visits):
         req = DummyRequest(unique_user_id='foo', since=0)
         res = views.visits_get(req)
-        assert res['_items'] == []
+        assert res['visits'] == []
 
 #    def test_get_visits_does_not_expose_params(self, visits):
 #        req = DummyRequest(unique_user_id='ujadkapdydazujuksyairpin')
 #        res = views.visits_get(req)
-#        for visit in res['_items']:
+#        for visit in res['visits']:
 #            assert "?" not in visit['path']
 
     def test_post_visits(self, visits):

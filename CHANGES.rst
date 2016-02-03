@@ -1,10 +1,22 @@
 Changelog for "Most used sites" backend
 =======================================
 
-0.5 (2016-02-03)
+0.7 (unreleased)
 ----------------
 
 - API change, request visits newer then timestamp.
+
+
+0.6 (2016-02-01)
+----------------
+
+- Fix JSON response, use 'visits' instead of '_items' for response dict.
+
+
+0.5 (2016-02-01)
+----------------
+
+- Adjust JSON response for individual user.
 
 
 0.4 (2016-01-16)
