@@ -16,9 +16,17 @@ def valid_user(request):
     except Invalid:
         request.errors.add('querystring', 'user id', 'invalid id format')
 
+def since(request):
+    try:
+      request.since = int(request.matchdict['since'][0])
+    except KeyError:
+      request.since = 0
+    except IndexError:
+      request.since = 0
 
-all_visits = Service(name='all_visits', path='/visits')
-visits = Service(name='visits', path='/visits/{user}', validators=[valid_user])
+
+all_visits = Service(name='all_visits', path='/visits') # XXX merge into visits service
+visits = Service(name='visits', path='/visits/{user}*since', validators=[valid_user, since])
 status = Service(name='status', path='/status')
 
 
@@ -64,7 +72,9 @@ def visits_get(request):
             duration=x.duration,
             active=x.active),
         DBSession.query(Visit).join(User).filter(
-            User.unique_id==request.unique_user_id).all()))
+            User.unique_id==request.unique_user_id,
+            Visit.visited_at>request.since
+        ).all()))
     response = dict(_items=visits)
     return response
 

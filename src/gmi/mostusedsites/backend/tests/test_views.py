@@ -23,6 +23,25 @@ class TestValidation:
             'description': 'invalid id format',
             'location': 'querystring'}]
 
+    def test_since(self):
+        req = DummyRequest(matchdict=dict(
+            user='fooptipjiWetAdujOgfiflaj',
+            since=('12345',)))
+        views.since(req)
+        assert req.since == 12345
+
+    def test_since_undefined(self):
+        req = DummyRequest(matchdict=dict(user='fooptipjiWetAdujOgfiflaj'))
+        views.since(req)
+        assert req.since == 0
+
+    def test_since_not_set(self):
+        req = DummyRequest(matchdict=dict(
+            user='fooptipjiWetAdujOgfiflaj',
+            since=()))
+        views.since(req)
+        assert req.since == 0
+
 
 class TestView:
     def test_index(self):
@@ -62,14 +81,14 @@ class TestView:
             assert "?" not in visit['host']
 
     def test_get_visits(self, visits):
-        req = DummyRequest(unique_user_id='ujadkapdydazujuksyairpin')
+        req = DummyRequest(unique_user_id='ujadkapdydazujuksyairpin', since=0)
         res = views.visits_get(req)
         for visit in res['_items']:
             assert set(visit.keys()) == set(
                 ['visited_at', 'duration', 'host', 'scheme', 'path', 'active'])
 
     def test_get_visits_existent(self, visits):
-        req = DummyRequest(unique_user_id='ujadkapdydazujuksyairpin')
+        req = DummyRequest(unique_user_id='ujadkapdydazujuksyairpin', since=0)
         res = views.visits_get(req)
         assert res['_items'] == [
             {
@@ -84,17 +103,30 @@ class TestView:
                 'host': 'test_visit',
                 'scheme': 'https',
                 'path': '/foo',
-                'visited_at': 1,
+                'visited_at': 3,
+                'active': False
+            }]
+
+    def test_get_visits_since(self, visits):
+        req = DummyRequest(unique_user_id='ujadkapdydazujuksyairpin', since=2)
+        res = views.visits_get(req)
+        assert res['_items'] == [
+            {
+                'duration': 1,
+                'host': 'test_visit',
+                'scheme': 'https',
+                'path': '/foo',
+                'visited_at': 3,
                 'active': False
             }]
 
     def test_get_visits_non_existent(self, visits):
-        req = DummyRequest(unique_user_id='foo')
+        req = DummyRequest(unique_user_id='foo', since=0)
         res = views.visits_get(req)
         assert res['_items'] == []
 
     def test_get_visits_does_not_expose_params(self, visits):
-        req = DummyRequest(unique_user_id='ujadkapdydazujuksyairpin')
+        req = DummyRequest(unique_user_id='ujadkapdydazujuksyairpin', since=0)
         res = views.visits_get(req)
         for visit in res['_items']:
             assert "?" not in visit['path']
@@ -149,6 +181,11 @@ class TestFunctional:
 
     def test_get_visit(self, app, visits):
         res = app.get('/visits/ujadkapdydazujuksyairpin')
+        assert res.status_code == 200
+        assert res.content_type == 'application/json'
+
+    def test_get_visit_since(self, app, visits):
+        res = app.get('/visits/ujadkapdydazujuksyairpin/1234567')
         assert res.status_code == 200
         assert res.content_type == 'application/json'
 
