@@ -66,7 +66,7 @@ class TestView:
         assert res['visits'] != []
         for visit in res['visits']:
             assert set(visit.keys()) == set(
-                ['visited_at', 'duration', 'host', 'active', 'id'])
+                ['visited_at', 'duration', 'host', 'active'])
 
     def test_all_visits_does_not_expose_path(self, visits):
         req = DummyRequest()
@@ -85,7 +85,7 @@ class TestView:
         res = views.visits_get(req)
         for visit in res['_items']:
             assert set(visit.keys()) == set(
-                ['visited_at', 'duration', 'host', 'scheme', 'path', 'active'])
+                ['visited_at', 'duration', 'host', 'active'])
 
     def test_get_visits_existent(self, visits):
         req = DummyRequest(unique_user_id='ujadkapdydazujuksyairpin', since=0)
@@ -94,15 +94,11 @@ class TestView:
             {
                 'duration': 1,
                 'host': 'test_visit',
-                'scheme': 'http',
-                'path': '',
                 'visited_at': 1,
                 'active': True
             }, {
                 'duration': 1,
                 'host': 'test_visit',
-                'scheme': 'https',
-                'path': '/foo',
                 'visited_at': 3,
                 'active': False
             }]
@@ -114,8 +110,6 @@ class TestView:
             {
                 'duration': 1,
                 'host': 'test_visit',
-                'scheme': 'https',
-                'path': '/foo',
                 'visited_at': 3,
                 'active': False
             }]
@@ -125,11 +119,11 @@ class TestView:
         res = views.visits_get(req)
         assert res['_items'] == []
 
-    def test_get_visits_does_not_expose_params(self, visits):
-        req = DummyRequest(unique_user_id='ujadkapdydazujuksyairpin', since=0)
-        res = views.visits_get(req)
-        for visit in res['_items']:
-            assert "?" not in visit['path']
+#    def test_get_visits_does_not_expose_params(self, visits):
+#        req = DummyRequest(unique_user_id='ujadkapdydazujuksyairpin')
+#        res = views.visits_get(req)
+#        for visit in res['_items']:
+#            assert "?" not in visit['path']
 
     def test_post_visits(self, visits):
         req = DummyRequest(
