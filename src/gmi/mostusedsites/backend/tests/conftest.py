@@ -1,12 +1,12 @@
 from gmi.mostusedsites.backend.models import (
     Base, Visit, User, State, DBSession)
+from gmi.mostusedsites.backend import main
 from pyramid.config import Configurator
 from pyramid.testing import testConfig
 from sqlalchemy import create_engine
 from sqlalchemy.exc import IntegrityError
 from transaction import abort
 from webtest import TestApp
-from gmi.mostusedsites.backend import main
 import os
 import pytest
 

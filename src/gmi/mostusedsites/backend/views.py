@@ -5,7 +5,9 @@ from pyramid.response import Response
 from pyramid.view import view_config
 from sqlalchemy.orm import load_only
 from sqlalchemy.orm.exc import NoResultFound
+
 from .models import DBSession, Visit, User, State
+from .responses import VisitsResponse
 from .schemas import VisitsSchema, UserSchema
 
 
@@ -48,32 +50,18 @@ def status_get(request):
 
 @all_visits.get()
 def all_visits_get(request):
-    visits = list(map(
-        lambda x: dict(
-            host=x.host,
-            visited_at=x.visited_at,
-            duration=x.duration,
-            active=x.active),
-        DBSession.query(Visit).order_by(
-            Visit.visited_at.desc()).limit(20000).all()))
-    response = dict(visits=visits)
-    return response
+    query = DBSession.query(Visit).order_by(
+            Visit.visited_at.desc()).limit(20000)
+    return VisitsResponse(query)
 
 
 @visits.get()
 def visits_get(request):
-    visits = list(map(
-        lambda x: dict(
-            host=x.host,
-            visited_at=x.visited_at,
-            duration=x.duration,
-            active=x.active),
-        DBSession.query(Visit).join(User).filter(
+    query = DBSession.query(Visit).join(User).filter(
             User.unique_id==request.unique_user_id,
             Visit.visited_at>request.since
-        ).order_by(Visit.visited_at.desc()).limit(20000).all()))
-    response = dict(visits=visits)
-    return response
+        ).order_by(Visit.visited_at.desc()).limit(20000)
+    return VisitsResponse(query)
 
 
 @visits.post(schema=VisitsSchema)

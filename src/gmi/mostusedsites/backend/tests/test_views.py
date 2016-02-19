@@ -6,6 +6,7 @@ from pyramid.testing import DummyRequest
 from webtest.app import AppError
 import colander
 import pytest
+import json
 
 
 class TestValidation:
@@ -62,7 +63,7 @@ class TestView:
 
     def test_all_visits(self, visits):
         req = DummyRequest()
-        res = views.all_visits_get(req)
+        res = json.loads(views.all_visits_get(req).text)
         assert res['visits'] != []
         for visit in res['visits']:
             assert set(visit.keys()) == set(
@@ -70,26 +71,26 @@ class TestView:
 
     def test_all_visits_does_not_expose_path(self, visits):
         req = DummyRequest()
-        res = views.all_visits_get(req)
+        res = json.loads(views.all_visits_get(req).text)
         for visit in res['visits']:
             assert "foo" not in visit['host']
 
     def test_all_visits_does_not_expose_params(self, visits):
         req = DummyRequest()
-        res = views.all_visits_get(req)
+        res = json.loads(views.all_visits_get(req).text)
         for visit in res['visits']:
             assert "?" not in visit['host']
 
     def test_get_visits(self, visits):
         req = DummyRequest(unique_user_id='ujadkapdydazujuksyairpin', since=0)
-        res = views.visits_get(req)
+        res = json.loads(views.visits_get(req).text)
         for visit in res['visits']:
             assert set(visit.keys()) == set(
                 ['visited_at', 'duration', 'host', 'active'])
 
     def test_get_visits_existent(self, visits):
         req = DummyRequest(unique_user_id='ujadkapdydazujuksyairpin', since=0)
-        res = views.visits_get(req)
+        res = json.loads(views.visits_get(req).text)
         assert res['visits'] == [
             {
                 'duration': 1,
@@ -105,7 +106,7 @@ class TestView:
 
     def test_get_visits_since(self, visits):
         req = DummyRequest(unique_user_id='ujadkapdydazujuksyairpin', since=2)
-        res = views.visits_get(req)
+        res = json.loads(views.visits_get(req).text)
         assert res['visits'] == [
             {
                 'duration': 1,
@@ -116,7 +117,7 @@ class TestView:
 
     def test_get_visits_non_existent(self, visits):
         req = DummyRequest(unique_user_id='foo', since=0)
-        res = views.visits_get(req)
+        res = json.loads(views.visits_get(req).text)
         assert res['visits'] == []
 
 #    def test_get_visits_does_not_expose_params(self, visits):

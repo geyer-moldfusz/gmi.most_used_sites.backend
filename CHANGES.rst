@@ -4,7 +4,7 @@ Changelog for "Most used sites" backend
 0.8 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Use chunked transfer for visits to reduce RAM consumption.
 
 
 0.7 (2016-02-03)
