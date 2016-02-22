@@ -20,6 +20,7 @@ class User(Base):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True, autoincrement=True)
     unique_id = Column(String(24), unique=True)
+    visits = relationship('Visit', back_populates='user')
 
 
 class Visit(Base):
@@ -32,7 +33,7 @@ class Visit(Base):
     host = Column(String(512), nullable=False)
     path = Column(String(512), nullable=False)
     user_id = Column(Integer, ForeignKey('users.id'))
-    user = relationship(User, backref='visits')
+    user = relationship(User)
 
     def __init__(self, url, **kwargs):
         self.url = url              # XXX this should be obsolete in future

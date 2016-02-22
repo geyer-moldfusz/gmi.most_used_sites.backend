@@ -73,6 +73,9 @@ def visits_post(request):
         user = User(unique_id=request.unique_user_id)
         DBSession.add(user)
 
-    for visit in request.json_body.get('visits'):
-        user.visits.append(Visit(**visit))
+    for visit_params in request.json_body.get('visits'):
+        visit = Visit(**visit_params)
+        visit.user = user
+        DBSession.add(visit)
+
     return dict()

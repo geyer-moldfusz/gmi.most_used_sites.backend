@@ -12,14 +12,9 @@ import pytest
 
 
 @pytest.fixture(scope='session')
-def setup_app():
+def app():
     settings = { 'sqlalchemy.url': 'sqlite://' }
-    return main({}, **settings)
-
-
-@pytest.fixture(scope='session')
-def app(setup_app):
-    return TestApp(setup_app)
+    return TestApp(main({}, **settings))
 
 
 @pytest.yield_fixture(scope='class')
@@ -43,21 +38,33 @@ def session(connection, request):
 
 
 @pytest.fixture(scope='function')
-def visits(session):
+def user(session):
     user = User(unique_id='ujadkapdydazujuksyairpin')
     session.add(user)
-    session.add(Visit(
-        url='http://test_visit',
-        visited_at=1,
-        duration=1,
-        user=user,
-        active=True))
-    session.add(Visit(
-        url='https://test_visit/foo?bar',
-        visited_at=3,
-        duration=1,
-        user=user,
-        active=False))
+    session.flush()
+
+    return user
+
+
+@pytest.fixture(scope='function')
+def visits(session, user):
+    visits = (
+        Visit(
+            url='http://test_visit',
+            visited_at=1,
+            duration=1,
+            user=user,
+            active=True),
+        Visit(
+            url='https://test_visit/foo?bar',
+            visited_at=3,
+            duration=1,
+            user=user,
+            active=False))
+    session.add_all(visits)
+    session.flush()
+
+    return visits
 
 
 @pytest.fixture(scope='function')

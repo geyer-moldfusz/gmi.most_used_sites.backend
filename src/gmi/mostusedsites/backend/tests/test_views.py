@@ -3,6 +3,7 @@ from gmi.mostusedsites.backend import views
 from gmi.mostusedsites.backend.models import User
 from pyramid.httpexceptions import HTTPServiceUnavailable
 from pyramid.testing import DummyRequest
+from sqlalchemy import inspect
 from webtest.app import AppError
 import colander
 import pytest
@@ -151,6 +152,20 @@ class TestView:
             content_type='application/json')
         res = views.visits_post(req)
         assert session.query(User).filter(User.unique_id=='blovJoufEo').one()
+
+    def test_post_visit_does_not_load_all_visits(self, session, user, visits):
+        req = DummyRequest(
+            unique_user_id='ujadkapdydazujuksyairpin',
+            json_body={'visits': [{
+                'url': 'http://foo',
+                'visited_at': 1,
+                'duration': 1,
+                'active': True}]},
+            post=True,
+            content_type='application/json')
+        res = views.visits_post(req)
+        ins = inspect(user)
+        assert 'visits' in ins.unloaded
 
 
 class TestFunctional:
