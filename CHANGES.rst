@@ -1,7 +1,7 @@
 Changelog for "Most used sites" backend
 =======================================
 
-0.9 (unreleased)
+0.9 (2016-02-22)
 ----------------
 
 - Fix bug, reduce RAM consumption when post visits
