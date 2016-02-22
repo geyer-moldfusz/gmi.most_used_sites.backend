@@ -3,8 +3,9 @@ from colander import Invalid
 from pyramid.httpexceptions import HTTPServiceUnavailable
 from pyramid.response import Response
 from pyramid.view import view_config
-from sqlalchemy.orm import load_only
 from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.exc import IntegrityError
+import json
 
 from .models import DBSession, Visit, User, State
 from .responses import VisitsResponse
@@ -29,7 +30,7 @@ def since(request):
 
 all_visits = Service(name='all_visits', path='/visits') # XXX merge into visits service
 visits = Service(name='visits', path='/visits/{user}*since', validators=[valid_user, since])
-status = Service(name='status', path='/status')
+stats = Service(name='stats', path='/stats')
 
 
 @view_config(route_name='home')
@@ -37,15 +38,15 @@ def index(request):
     return Response('<h1>Hello World!</h1>')
 
 
-@status.get()
-def status_get(request):
+@stats.get()
+def state_get(request):
     try:
         state = DBSession.query(State).one()
         assert state.intact
     except:
         raise HTTPServiceUnavailable()
 
-    return dict(status='ok')
+    return dict(state='ok')
 
 
 @all_visits.get()
@@ -79,3 +80,11 @@ def visits_post(request):
         DBSession.add(visit)
 
     return dict()
+
+
+@visits.post(context=IntegrityError)
+def _visit_integrity_error(request):
+    response =  Response(json.dumps({'status': 'visit already submitted'}))
+    response.status_int = 205
+    response.content_type = 'application/json'
+    return response

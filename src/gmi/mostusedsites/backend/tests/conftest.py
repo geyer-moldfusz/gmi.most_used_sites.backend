@@ -1,8 +1,6 @@
 from gmi.mostusedsites.backend.models import (
     Base, Visit, User, State, DBSession)
 from gmi.mostusedsites.backend import main
-from pyramid.config import Configurator
-from pyramid.testing import testConfig
 from sqlalchemy import create_engine
 from sqlalchemy.exc import IntegrityError
 from transaction import abort
@@ -34,14 +32,13 @@ def session(connection, request):
     request.addfinalizer(trans.rollback)
     request.addfinalizer(abort)
 
-    return DBSession()
+    return DBSession
 
 
 @pytest.fixture(scope='function')
 def user(session):
     user = User(unique_id='ujadkapdydazujuksyairpin')
     session.add(user)
-    session.flush()
 
     return user
 
@@ -62,18 +59,17 @@ def visits(session, user):
             user=user,
             active=False))
     session.add_all(visits)
-    session.flush()
 
     return visits
 
 
 @pytest.fixture(scope='function')
-def status_intact(session):
+def state_intact(session):
     state = State(intact=True)
     session.add(state)
 
 
 @pytest.fixture(scope='function')
-def status_failure(session):
+def state_failure(session):
     state = State(intact=False)
     session.add(state)
