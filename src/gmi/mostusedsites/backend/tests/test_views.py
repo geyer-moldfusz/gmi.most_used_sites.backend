@@ -51,15 +51,15 @@ class TestView:
         res = views.index(req)
         assert res.status_code == 200
 
-    def test_status(self, status_intact):
+    def test_state(self, state_intact):
         req = DummyRequest()
-        res = views.status_get(req)
-        assert res == dict(status = 'ok')
+        res = views.state_get(req)
+        assert res == dict(state = 'ok')
 
-    def test_status_failure(self, status_failure):
+    def test_state_failure(self, state_failure):
         req = DummyRequest()
         with pytest.raises(HTTPServiceUnavailable) as e:
-            res = views.status_get(req)
+            res = views.state_get(req)
         assert 'The server is currently unavailable' in str(e)
 
     def test_all_visits(self, visits):
@@ -173,16 +173,15 @@ class TestFunctional:
         res = app.get('/')
         assert res.status_code == 200
 
-    def test_status(self, app, status_intact):
-        res = app.get('/status')
+    def test_state(self, app, state_intact):
+        res = app.get('/stats')
         assert res.status_code == 200
         assert res.content_type == 'application/json'
 
-    def test_status_failed(self, app, status_failure):
+    def test_state_failed(self, app, state_failure):
         with pytest.raises(AppError) as e:
-            res = app.get('/status')
+            res = app.get('/stats')
         assert '503 Service Unavailable' in str(e)
-
 
     def test_get_all_visits(self, app, visits):
         res = app.get('/visits')
@@ -197,7 +196,6 @@ class TestFunctional:
     def test_get_visit_since(self, app, visits):
         res = app.get('/visits/ujadkapdydazujuksyairpin/1234567')
         assert res.status_code == 200
-        assert res.content_type == 'application/json'
 
     def test_get_visit_user_invalid(self, app):
         with pytest.raises(AppError) as e:
@@ -232,3 +230,13 @@ class TestFunctional:
                     'duration': 1,
                     'active': True}]})
         assert '400 Bad Request' in str(e)
+
+#    def test_post_visit_existing(self, app, visits):
+#        res = app.post_json(
+#            '/visits/ujadkapdydazujuksyairpin',
+#            {'visits': [{
+#                'url': 'http://test_visit',
+#                'visited_at': 1,
+#                'duration': 1,
+#                'active': True}]})
+#        assert res.status_code == 205

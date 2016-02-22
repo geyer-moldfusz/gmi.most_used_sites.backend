@@ -4,7 +4,8 @@ Changelog for "Most used sites" backend
 0.9 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Fix bug, reduce RAM consumption when post visits
+- Handle IntegrityError when posting duplicate visits
 
 
 0.8 (2016-02-19)
