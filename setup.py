@@ -4,20 +4,6 @@ import sys, os
 
 version = '0.10.dev0'
 
-requires = [
-    'alembic',
-    'colander',
-    'cornice',
-    'pyramid',
-    'pyramid_chameleon',
-    'pyramid_debugtoolbar',
-    'pyramid_tm',
-    'SQLAlchemy',
-    'transaction',
-    'zope.sqlalchemy',
-    'waitress',
-]
-
 class Tox(TestCommand):
     user_options = [('tox-args=', 'a', "Arguments to pass to tox")]
     def initialize_options(self):
@@ -36,6 +22,20 @@ class Tox(TestCommand):
             args = shlex.split(self.tox_args)
         errno = tox.cmdline(args=args)
         sys.exit(errno)
+
+requires = [
+    'alembic',
+    'colander',
+    'cornice',
+    'pyramid',
+    'pyramid_chameleon',
+    'pyramid_debugtoolbar',
+    'pyramid_tm',
+    'SQLAlchemy',
+    'transaction',
+    'zope.sqlalchemy',
+    'waitress',
+]
 
 setup(name='gmi.mostusedsites.backend',
       version=version,

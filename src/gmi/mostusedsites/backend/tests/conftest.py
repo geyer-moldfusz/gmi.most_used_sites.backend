@@ -1,50 +1,22 @@
-from gmi.mostusedsites.backend.models import (
-    Base, Visit, User, State, DBSession)
-from gmi.mostusedsites.backend import main
+from gmi.mostusedsites.backend.models import Base, DBSession, User, Visit
 from sqlalchemy import create_engine
-from sqlalchemy.exc import IntegrityError
-from transaction import abort
 from webtest import TestApp
-import os
+import gmi.mostusedsites.backend as backend
 import pytest
+import transaction
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def app():
-    settings = { 'sqlalchemy.url': 'sqlite://' }
-    return TestApp(main({}, **settings))
-
-
-@pytest.yield_fixture(scope='class')
-def connection(app, request):
-    """Session-wide test database."""
-    connection = Base.metadata.bind.connect()
+    settings = { 'sqlalchemy.url': 'sqlite:///:memory:' }
+    app = TestApp(backend.main({}, **settings))
     Base.metadata.create_all()
-
-    yield connection
-
-    Base.metadata.drop_all()
+    return app
 
 
-@pytest.fixture(scope='function')
-def session(connection, request):
-    trans = connection.begin()          # begin a non-orm transaction
-    request.addfinalizer(trans.rollback)
-    request.addfinalizer(abort)
-
-    return DBSession
-
-
-@pytest.fixture(scope='function')
-def user(session):
+@pytest.fixture(scope="session")
+def test_data(app):
     user = User(unique_id='ujadkapdydazujuksyairpin')
-    session.add(user)
-
-    return user
-
-
-@pytest.fixture(scope='function')
-def visits(session, user):
     visits = (
         Visit(
             url='http://test_visit',
@@ -58,18 +30,12 @@ def visits(session, user):
             duration=1,
             user=user,
             active=False))
-    session.add_all(visits)
-
-    return visits
-
-
-@pytest.fixture(scope='function')
-def state_intact(session):
-    state = State(intact=True)
-    session.add(state)
+    DBSession.add_all(visits)
+    transaction.commit()
 
 
-@pytest.fixture(scope='function')
-def state_failure(session):
-    state = State(intact=False)
-    session.add(state)
+@pytest.fixture(scope="function")
+def session(request, test_data):
+    request.addfinalizer(DBSession.rollback)
+    request.addfinalizer(DBSession.close)
+    return DBSession

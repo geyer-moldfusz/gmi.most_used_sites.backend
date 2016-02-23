@@ -31,8 +31,12 @@ class TestUserSchema:
 
 class TestVisitsSchema:
     def test_valid(self):
-        data = {'visits': [
-            {'url': 'http://foo', 'duration': 1, 'visited_at': 1, 'active': True}]}
+        data = {
+            'visits': [{
+                'url': 'http://foo',
+                'duration': 1,
+                'visited_at': 1,
+                'active': True}]}
         des = VisitsSchema().deserialize(data)
         assert des == data
 
@@ -43,9 +47,11 @@ class TestVisitsSchema:
 
     def test_additional_data(self):
         data = {
-            'visits': [
-                {'url': 'http://foo', 'duration': 1, 'visited_at': 1, 'active': True}
-            ],
+            'visits': [{
+                'url': 'http://foo',
+                'duration': 1,
+                'visited_at': 1,
+                'active': True }],
             'foo': 'bar'}
         des = VisitsSchema().deserialize(data)
         assert 'foo' not in des
@@ -53,12 +59,20 @@ class TestVisitsSchema:
 
 class TestVisitListSchema:
     def test_valid(self):
-        data = [{'url': 'http://foo', 'duration': 1, 'visited_at': 1, 'active': True}]
+        data = [{
+            'url': 'http://foo',
+            'duration': 1,
+            'visited_at': 1,
+            'active': True}]
         des = VisitListSchema().deserialize(data)
         assert des == data
 
     def test_no_list(self):
-        data = {'url': 'http://foo', 'duration': 1, 'visited_at': 1, 'active': True}
+        data = {
+            'url': 'http://foo',
+            'duration': 1,
+            'visited_at': 1,
+            'active': True}
         with pytest.raises(colander.Invalid):
             VisitListSchema().deserialize(data)
 

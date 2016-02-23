@@ -79,12 +79,13 @@ def visits_post(request):
         visit.user = user
         DBSession.add(visit)
 
+    DBSession.flush()   # XXX flush in loop, report failed visits seperately
     return dict()
 
 
 @visits.post(context=IntegrityError)
 def _visit_integrity_error(request):
-    response =  Response(json.dumps({'status': 'visit already submitted'}))
+    response =  Response(json.dumps({'warning': 'visit already submitted'}))
     response.status_int = 205
     response.content_type = 'application/json'
     return response
