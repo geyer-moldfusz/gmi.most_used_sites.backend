@@ -51,7 +51,7 @@ class TestVisitsSchema:
                 'url': 'http://foo',
                 'duration': 1,
                 'visited_at': 1,
-                'active': True }],
+                'active': True}],
             'foo': 'bar'}
         des = VisitsSchema().deserialize(data)
         assert 'foo' not in des

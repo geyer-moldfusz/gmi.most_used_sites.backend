@@ -7,10 +7,12 @@ import transaction
 
 
 @pytest.fixture(scope="session")
-def app():
-    settings = { 'sqlalchemy.url': 'sqlite:///:memory:' }
+def app(request):
+    settings = {'sqlalchemy.url': 'sqlite:///:memory:'}
     app = TestApp(backend.main({}, **settings))
     Base.metadata.create_all()
+
+    request.addfinalizer(Base.metadata.drop_all)
     return app
 
 
@@ -32,6 +34,8 @@ def test_data(app):
             active=False))
     DBSession.add_all(visits)
     transaction.commit()
+
+    return {'visits': visits, 'users': [user]}
 
 
 @pytest.fixture(scope="function")

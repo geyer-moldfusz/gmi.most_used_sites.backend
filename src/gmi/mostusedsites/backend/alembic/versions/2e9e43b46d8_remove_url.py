@@ -1,3 +1,6 @@
+from alembic import op
+import sqlalchemy as sa
+
 """Remove url
 
 Revision ID: 2e9e43b46d8
@@ -12,9 +15,6 @@ down_revision = '1e7f84407a'
 branch_labels = None
 depends_on = None
 
-from alembic import op
-import sqlalchemy as sa
-
 
 def upgrade():
     try:
@@ -25,4 +25,5 @@ def upgrade():
 
 
 def downgrade():
-    op.add_column('visits', sa.Column('url', sa.VARCHAR(length=512), nullable=False))
+    op.add_column(
+        'visits', sa.Column('url', sa.VARCHAR(length=512), nullable=False))

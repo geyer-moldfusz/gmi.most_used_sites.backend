@@ -19,17 +19,20 @@ def valid_user(request):
     except Invalid:
         request.errors.add('querystring', 'user id', 'invalid id format')
 
+
 def since(request):
     try:
-      request.since = int(request.matchdict['since'][0])
+        request.since = int(request.matchdict['since'][0])
     except KeyError:
-      request.since = 0
+        request.since = 0
     except IndexError:
-      request.since = 0
+        request.since = 0
 
 
-all_visits = Service(name='all_visits', path='/visits') # XXX merge into visits service
-visits = Service(name='visits', path='/visits/{user}*since', validators=[valid_user, since])
+# XXX merge into visits service
+all_visits = Service(name='all_visits', path='/visits')
+visits = Service(
+    name='visits', path='/visits/{user}*since', validators=[valid_user, since])
 stats = Service(name='stats', path='/stats')
 
 
@@ -51,25 +54,26 @@ def state_get(request):
 
 @all_visits.get()
 def all_visits_get(request):
-    query = DBSession.query(Visit).order_by(
-            Visit.visited_at.desc()).limit(20000)
+    query = DBSession.query(Visit)\
+        .order_by(Visit.visited_at.desc()).limit(20000)
     return VisitsResponse(query)
 
 
 @visits.get()
 def visits_get(request):
-    query = DBSession.query(Visit).join(User).filter(
-            User.unique_id==request.unique_user_id,
-            Visit.visited_at>request.since
-        ).order_by(Visit.visited_at.desc()).limit(20000)
+    query = DBSession.query(Visit).join(User)\
+        .filter(
+            User.unique_id == request.unique_user_id,
+            Visit.visited_at > request.since)\
+        .order_by(Visit.visited_at.desc()).limit(20000)
     return VisitsResponse(query)
 
 
 @visits.post(schema=VisitsSchema)
 def visits_post(request):
     try:
-        user = DBSession.query(User).filter(
-            User.unique_id==request.unique_user_id).one()
+        user = DBSession.query(User)\
+            .filter(User.unique_id == request.unique_user_id).one()
     except NoResultFound:
         user = User(unique_id=request.unique_user_id)
         DBSession.add(user)
@@ -85,7 +89,8 @@ def visits_post(request):
 
 @visits.post(context=IntegrityError)
 def _visit_integrity_error(request):
-    response =  Response(json.dumps({'warning': 'visit already submitted'}))
-    response.status_int = 205
-    response.content_type = 'application/json'
+    response = Response(
+        json.dumps({'warning': 'visit already submitted'}),
+        status_int=205,
+        content_type='application/json')
     return response

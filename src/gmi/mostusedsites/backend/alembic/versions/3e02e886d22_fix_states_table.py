@@ -1,3 +1,6 @@
+from alembic import op
+import sqlalchemy as sa
+
 """fix state table
 
 Revision ID: 3e02e886d22
@@ -11,9 +14,6 @@ revision = '3e02e886d22'
 down_revision = '56c52326119'
 branch_labels = None
 depends_on = None
-
-from alembic import op
-import sqlalchemy as sa
 
 
 def upgrade():

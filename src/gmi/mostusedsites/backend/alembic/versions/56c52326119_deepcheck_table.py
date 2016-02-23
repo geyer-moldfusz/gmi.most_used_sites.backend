@@ -1,3 +1,6 @@
+from alembic import op
+import sqlalchemy as sa
+
 """deepcheck table
 
 Revision ID: 56c52326119
@@ -11,9 +14,6 @@ revision = '56c52326119'
 down_revision = '2e9e43b46d8'
 branch_labels = None
 depends_on = None
-
-from alembic import op
-import sqlalchemy as sa
 
 
 def upgrade():
